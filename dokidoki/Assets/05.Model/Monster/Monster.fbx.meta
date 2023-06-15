@@ -468,7 +468,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
@@ -484,7 +484,9 @@ ModelImporter:
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
-    extraExposedTransformPaths: []
+    extraExposedTransformPaths:
+    - hip/belly/L_arm/L_elbow/L_wrist
+    - hip/belly/R_arm/R_elbow/R_wrist
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
@@ -1497,6 +1499,8 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips:
+  - 2a260e25a971c1742995d9f078987f0e
+  - f6409e06a2efd7646bc5e4bc6a336aa8
   - 76c5c477c656505469f3b9eca9e6d542
   importAnimation: 1
   humanDescription:
