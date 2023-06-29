@@ -1,28 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerCtrl : MonoBehaviour
 {
     // 컴포넌트를 처리할 변수
-    private Transform tr;
+    public Transform tr;
     // Animation 컴포넌트를 저장할 변수
     private Animation anim;
     // 이동 속력 변수 (public으로 선언되어 인스펙터 뷰에 노출됨)
     public float moveSpeed = 10.0f;
     // 회전 속도 변수
     public float turnSpeed = 80.0f;
-    // Start is called before the first frame update
     // 초기 생명 값
     private readonly float initHp = 100.0f;
     // 현재 생명 값
     public float currHp;
+    // Hpbar 연결할 변수
+    private Image hpBar;
+    // 델리게이트 선언
+    public delegate void PlayerDieHandler();
+    // 이벤트 선언
+    public static event PlayerDieHandler OnPlayerDie;
+    // Start is called before the first frame update
     void Start()
     {
-        // Transform 컴포넌트를 추출해 변수에 대입
+      
+        // HP 초기화
+        currHp = initHp;
+        // Hpbar 연결
+        hpBar = GameObject.FindGameObjectWithTag("HP_BAR")?.GetComponent<Image>();
+        DisplayHealth();
+        // 컴포넌트를 추출해 변수에 대입
         tr = GetComponent<Transform>();
         anim = GetComponent<Animation>();
+        // 애니메이션 실행
         anim.Play("Idle");
+        turnSpeed = 0.0f;
+
+        turnSpeed = 80.0f;
     }
     // Update is called once per frame
     void Update()
@@ -70,6 +86,7 @@ public class PlayerCtrl : MonoBehaviour
         if (currHp >= 0.0f && coll.CompareTag("PUNCH"))
         {
             currHp -= 10.0f;
+            DisplayHealth();
             Debug.Log($"Player hp = {currHp / initHp}");
             // Player의 생명이 0 이하이면 사망 처리
             if (currHp <= 0.0f)
@@ -78,19 +95,17 @@ public class PlayerCtrl : MonoBehaviour
             }
         }
     }
-
     // Player의 사망 처리
     void PlayerDie()
     {
         Debug.Log("Player Die !");
-        // // MONSTER 태그를 가진 모든 게임오브젝트를 찾아옴
-        GameObject[] monsters = GameObject.FindGameObjectsWithTag("MONSTER");
-        // // 모든 몬스터의 OnPlayerDie 함수를 순차적으로 호출
-        foreach (GameObject monster in monsters)
-        {
-            monster.SendMessage("OnPlayerDie", SendMessageOptions.DontRequireReceiver);
-        }
-
-
+        // 주인공 사망 이벤트 호출(발생)
+        OnPlayerDie();
+        //GameObject.Find("GameMgr").GetComponent<GameManager>().IsGameOver = true; 
+        GameManager.instance.IsGameOver = true;
+    }
+    void DisplayHealth()
+    {
+        hpBar.fillAmount = currHp / initHp;
     }
 }
